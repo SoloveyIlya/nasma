@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Login | NASMA INTERNATIONAL – FZCO</title>
+  <meta name="description" content="Login to NASMA INTERNATIONAL – FZCO portal." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css?v=20250109" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header data-include></header>
+
+  <main id="main">
+    <section class="login-section">
+      <div class="container">
+        <div class="login-container">
+          <div class="login-header">
+            <h1 class="reveal-up">Welcome Back</h1>
+            <p class="muted reveal-up delay-1">Sign in to your NASMA INTERNATIONAL account</p>
+          </div>
+          
+          <form class="login-form reveal-up delay-2" id="login-form" novalidate>
+            <div class="form-field fl">
+              <input type="email" id="login-email" name="email" required />
+              <label for="login-email">Email address</label>
+            </div>
+            
+            <div class="form-field fl">
+              <input type="password" id="login-password" name="password" required />
+              <label for="login-password">Password</label>
+            </div>
+            
+            <div class="form-options">
+              <label class="checkbox">
+                <input type="checkbox" id="remember" />
+                <span>Remember me</span>
+              </label>
+            </div>
+            
+            <div class="form-actions">
+              <button type="submit" class="btn primary full-width" id="login-submit">Sign In</button>
+            </div>
+            
+            <p class="form-note" id="login-note" hidden>Login successful!</p>
+          </form>
+          
+          <div class="login-footer reveal-up delay-3">
+            <p>Don't have an account? <a href="./register.html">Create</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer data-include></footer>
+
+  <script src="./js/script.js?v=20250109"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Contacts | NASMA INTERNATIONAL – FZCO</title>
+  <meta name="description" content="Contacts NASMA INTERNATIONAL – FZCO: manufacturing, R&D, international presence." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css?v=20250109" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header data-include></header>
+
+  <main id="main">
+    <section class="contacts" id="contacts">
+        <div class="container">
+          <div class="section-head">
+            <h2 class="reveal-up">Contacts</h2>
+            <p class="muted reveal-up delay-1">Contact us for consultation and cooperation.</p>
+          </div>
+          <div class="contacts-grid">
+            <div class="contacts-info reveal-up">
+              <h3>NASMA INTERNATIONAL - FZCO</h3>
+              <p><strong>Address:</strong> Premises Number - 31786-001 IFZA Business Park DDP Dubai, UAE</p>
+              <p><strong>Phone:</strong> <a href="tel:+971568858578">+971568858578</a>, <a href="tel:+971585808708">+971585808708</a></p>
+              <p><strong>Email:</strong> <a href="mailto:info@nasmainternational.com">info@nasmainternational.com</a></p>
+            </div>
+            <div class="contacts-map reveal-up delay-1">
+              <img src="./img/map.png" alt="Map to our office" />
+            </div>
+          </div>
+        </div>
+    </section>
+
+    <section class="contact-form" id="feedback">
+        <div class="container">
+          <div class="section-head">
+            <h2 class="reveal-up">Contact us</h2>
+            <p class="muted reveal-up delay-1">Leave a request — we will answer in the near future.</p>
+          </div>
+          <form class="form-card reveal-up" id="feedback-form" novalidate>
+            <div class="form-grid">
+              <div class="form-field fl">
+                <input type="text" id="name" name="name" required />
+                <label for="name">Name</label>
+              </div>
+              <div class="form-field fl">
+                <input type="email" id="email" name="email" required />
+                <label for="email">Email address</label>
+              </div>
+              <div class="form-field form-col-2 fl">
+                <input type="tel" id="phone" name="phone" />
+                <label for="phone">Phone</label>
+              </div>
+              <div class="form-field form-col-2 fl">
+                <textarea id="message" name="message" rows="4" required></textarea>
+                <label for="message">Message</label>
+              </div>
+              <div class="form-field form-col-2">
+                <label class="checkbox">
+                  <input type="checkbox" id="consent" required />
+                  <span>I agree with the data processing policy</span>
+                </label>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn primary" id="feedback-submit">Send</button>
+            </div>
+            <p class="form-note" id="form-note" hidden>Thank you! Your request has been sent.</p>
+          </form>
+        </div>
+      </section>    
+  </main>
+
+  <footer data-include></footer>
+
+  <script src="./js/script.js?v=20250109"></script>
+</body>
+</html>
