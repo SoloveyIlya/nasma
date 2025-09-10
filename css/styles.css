@@ -365,7 +365,8 @@ input:focus, textarea:focus, select:focus { box-shadow: 0 0 0 4px rgba(255,122,0
 
 /* Sticky footer */
 body { display: flex; flex-direction: column; min-height: 100vh; }
-main { flex: 1 0 auto; }
+main { flex: 1 0 auto; 
+}
 
 /* Cookie Consent Modal specific styles */
 .cookie-consent {
@@ -414,4 +415,8 @@ main { flex: 1 0 auto; }
 .access-denied-container .btn {
   padding: 12px 24px;
   font-size: 16px;
+}
+
+.contacts {
+  padding: 80px 0 48px; 
 }

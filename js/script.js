@@ -501,3 +501,4 @@ document.addEventListener('DOMContentLoaded', async () => {
   initForm();
   initCookieConsent(); // Initialize cookie consent
 });
+
