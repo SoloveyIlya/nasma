@@ -362,3 +362,52 @@ input:focus, textarea:focus { box-shadow: 0 0 0 4px rgba(255,122,0,0.1), 0 1px 0
 /* Sticky footer */
 body { display: flex; flex-direction: column; min-height: 100vh; }
 main { flex: 1 0 auto; }
+
+/* Cookie Consent Modal specific styles */
+.cookie-consent {
+  z-index: 1001; /* Make sure it's above other modals */
+}
+.cookie-consent .modal-container {
+  max-width: 500px;
+  text-align: center;
+}
+.cookie-consent h2 {
+  margin-bottom: 16px;
+  font-size: 22px;
+}
+.cookie-consent p {
+  margin-bottom: 24px;
+  font-size: 15px;
+}
+.cookie-consent .modal-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* Access Denied Page styles */
+.access-denied-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+.access-denied-container h1 {
+  font-size: 48px;
+  color: #e74c3c;
+  margin-bottom: 20px;
+}
+.access-denied-container p {
+  font-size: 18px;
+  color: var(--text);
+  margin-bottom: 30px;
+}
+.access-denied-container .btn {
+  padding: 12px 24px;
+  font-size: 16px;
+}

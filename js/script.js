@@ -439,8 +439,58 @@ function initUI() {
   initNewsSlider();
   
   // Initialize news modal
-  if (document.getElementById('news-modal')) {
-    initNewsModal();
+  // if (document.getElementById('news-modal')) {
+  //   initNewsModal();
+  // }
+}
+
+function setCookie(name, value, days) {
+  let expires = "";
+  if (days) {
+    const date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    expires = "; expires=" + date.toUTCString();
+  }
+  document.cookie = name + "=" + (value || "") + expires + "; path=/; SameSite=Lax";
+}
+
+function getCookie(name) {
+  const nameEQ = name + "=";
+  const ca = document.cookie.split(';');
+  for (let i = 0; i < ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) === ' ') c = c.substring(1, c.length);
+    if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+  }
+  return null;
+}
+
+function initCookieConsent() {
+  const consentModal = document.getElementById('cookie-consent-modal');
+  const acceptBtn = document.getElementById('accept-cookies');
+  const declineBtn = document.getElementById('decline-cookies');
+  const cookieName = 'cookie_consent';
+
+  if (!consentModal || !acceptBtn || !declineBtn) return;
+
+  const hasConsent = getCookie(cookieName);
+
+  if (!hasConsent) {
+    consentModal.hidden = false;
+    document.body.style.overflow = 'hidden'; // Disable scroll
+
+    acceptBtn.addEventListener('click', () => {
+      setCookie(cookieName, 'accepted', 365);
+      consentModal.hidden = true;
+      document.body.style.overflow = ''; // Enable scroll
+    });
+
+    declineBtn.addEventListener('click', () => {
+      window.location.href = './access-denied.html'; // Redirect to access denied page
+    });
+  } else if (hasConsent === 'declined') {
+    // If user previously declined, redirect them immediately
+    window.location.href = './access-denied.html';
   }
 }
 
@@ -449,4 +499,5 @@ document.addEventListener('DOMContentLoaded', async () => {
   await include('footer[data-include]', './components/footer.html');
   initUI();
   initForm();
+  initCookieConsent(); // Initialize cookie consent
 });
