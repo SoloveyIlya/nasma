@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Statement of Interest | NASMA INTERNATIONAL – FZCO</title>
+  <meta name="description" content="Login to NASMA INTERNATIONAL – FZCO portal." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css?v=20250109" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header data-include></header>
+
+  <main id="main">
+    <section class="login-section">
+      <div class="container">
+        <div class="login-container">
+          <div class="login-header">
+            <h1 class="reveal-up">Statement of Interest</h1>
+            <p class="muted reveal-up delay-1">We appreciate your interest in partnering with us. Please provide the following details to help us understand your needs.</p>
+          </div>
+          
+          <form class="login-form reveal-up delay-2" id="inquiry-form" novalidate>
+            <div class="form-field fl">
+              <input type="text" id="full-name" name="fullName" required />
+              <label for="full-name">Full Name</label>
+            </div>
+            
+            <div class="form-field fl">
+              <input type="text" id="company-organization" name="companyOrganization" required />
+              <label for="company-organization">Company / Organization</label>
+            </div>
+            
+            <div class="form-field fl">
+              <input type="email" id="corporate-email" name="corporateEmail" required />
+              <label for="corporate-email">Corporate Email Address</label>
+            </div>
+            
+            <div class="form-field fl">
+              <div class="select-wrapper">
+                <select id="nature-of-inquiry" name="natureOfInquiry" required>
+                  <option value="" disabled selected>Select an option</option>
+                  <option value="new-device-development">New Device Development</option>
+                  <option value="oem-manufacturing-capacity">OEM Manufacturing Capacity</option>
+                  <option value="technical-partnership">Technical Partnership</option>
+                  <option value="other">Other</option>
+                </select>
+                <label for="nature-of-inquiry">Nature of Inquiry</label>
+              </div>
+            </div>
+            
+            <div class="form-field fl">
+              <textarea id="project-outline" name="projectOutline" rows="5" placeholder="Please provide a brief, non-confidential overview of your project requirements and objectives." required></textarea>
+              <label for="project-outline">Project Outline</label>
+            </div>
+            
+            <div class="form-field fl">
+              <input type="text" id="referral-source" name="referralSource" required />
+              <label for="referral-source">Referral Source</label>
+            </div>
+            
+            <div class="form-options">
+              <label class="checkbox">
+                <input type="checkbox" id="nda-acknowledgement" required />
+                <span>I acknowledge that all information is treated with strict confidentiality under our NDA framework.</span>
+              </label>
+            </div>
+            
+            <div class="form-actions">
+              <button type="submit" class="btn primary full-width" id="submit-inquiry">Submit Inquiry</button>
+            </div>
+            
+            <p class="form-note" id="inquiry-success-note" hidden>Thank you. Your inquiry has been received and will be reviewed by our committee. Please note that a response is not guaranteed and may take several weeks. Direct follow-ups will not be acknowledged.</p>
+          </form>
+          
+          <div class="login-footer reveal-up delay-3">
+            <p class="muted">For any immediate concerns, please contact our <a href="./contacts.html">support team</a>.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer data-include></footer>
+
+  <script src="./js/script.js?v=20250109"></script>
+</body>
+</html>

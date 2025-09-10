@@ -41,11 +41,11 @@ function initForm() {
   });
 }
 
-function initLoginForm() {
-  const form = document.getElementById('login-form');
+function initInquiryForm() {
+  const form = document.getElementById('inquiry-form');
   if (!form) return;
-  const note = document.getElementById('login-note');
-  const submitBtn = document.getElementById('login-submit');
+  const note = document.getElementById('inquiry-success-note');
+  const submitBtn = document.getElementById('submit-inquiry');
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     if (!form.checkValidity()) {
@@ -56,18 +56,18 @@ function initLoginForm() {
       submitBtn?.classList.add('loading');
       submitBtn?.setAttribute('disabled', 'true');
       await new Promise(r => setTimeout(r, 1200));
+      form.reset(); // Сбросить форму после успешной отправки
       if (note) {
         note.hidden = false;
-        note.textContent = 'Login failed. Please check your credentials.';
-        setTimeout(() => { 
-          console.log('Login data:', Object.fromEntries(new FormData(form).entries()));
-        }, 2000);
+        note.textContent = 'Thank you. Your inquiry has been received and will be reviewed by our committee. Please note that a response is not guaranteed and may take several weeks. Direct follow-ups will not be acknowledged.';
+        // Опционально: скрыть сообщение через несколько секунд
+        // setTimeout(() => { note.hidden = true; }, 10000);
       }
     } catch (err) {
       if (note) {
         note.hidden = false;
-        note.textContent = 'Login failed. Please check your credentials.';
-        setTimeout(() => { note.hidden = true; }, 3000);
+        note.textContent = 'Error sending inquiry. Please try again later.';
+        setTimeout(() => { note.hidden = true; }, 5000);
       }
     } finally {
       submitBtn?.classList.remove('loading');
@@ -81,15 +81,15 @@ function initRegisterForm() {
   if (!form) return;
   const note = document.getElementById('register-note');
   const submitBtn = document.getElementById('register-submit');
-  
+
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-    
+
     const formData = new FormData(form);
     const password = formData.get('password');
     const confirmPassword = formData.get('confirm-password');
     const terms = formData.get('terms');
-    
+
     // Custom validation
     if (password !== confirmPassword) {
       if (note) {
@@ -100,7 +100,7 @@ function initRegisterForm() {
       }
       return;
     }
-    
+
     if (password.length < 8) {
       if (note) {
         note.hidden = false;
@@ -110,7 +110,7 @@ function initRegisterForm() {
       }
       return;
     }
-    
+
     if (!terms) {
       if (note) {
         note.hidden = false;
@@ -120,12 +120,12 @@ function initRegisterForm() {
       }
       return;
     }
-    
+
     if (!form.checkValidity()) {
       form.reportValidity();
       return;
     }
-    
+
     try {
       submitBtn?.classList.add('loading');
       submitBtn?.setAttribute('disabled', 'true');
@@ -154,13 +154,13 @@ function initNewsSlider() {
   const newsDots = document.getElementById('news-dots');
   const prevBtn = document.getElementById('news-prev');
   const nextBtn = document.getElementById('news-next');
-  
+
   if (!newsTrack || !newsDots || !prevBtn || !nextBtn) return;
-  
+
   let currentSlide = 0;
   let newsData = [];
   let slidesPerView = 3;
-  
+
   // Determine slides per view based on screen size
   function updateSlidesPerView() {
     if (window.innerWidth <= 480) {
@@ -171,7 +171,7 @@ function initNewsSlider() {
       slidesPerView = 3;
     }
   }
-  
+
   // Load news data from JSON
   async function loadNewsData() {
     try {
@@ -189,7 +189,7 @@ function initNewsSlider() {
       newsTrack.innerHTML = '<div class="news-card"><div class="news-card-inner"><div class="news-card-content"><h3>News coming soon</h3><p>Stay tuned for the latest updates from NASMA INTERNATIONAL – FZCO.</p></div></div></div>';
     }
   }
-  
+
   // Render news cards
   function renderNews() {
     console.log('Rendering news cards...');
@@ -211,7 +211,7 @@ function initNewsSlider() {
           </div>
         </div>
       `;
-      
+
       // Add click handler to open modal
       newsCard.addEventListener('click', (e) => {
         e.preventDefault();
@@ -219,7 +219,7 @@ function initNewsSlider() {
         console.log('News card clicked:', news);
         openNewsModal(news);
       });
-      
+
       // Also add click handler to inner elements
       const innerCard = newsCard.querySelector('.news-card-inner');
       if (innerCard) {
@@ -230,18 +230,18 @@ function initNewsSlider() {
           openNewsModal(news);
         });
       }
-      
+
       newsTrack.appendChild(newsCard);
       console.log('News card added:', news.title);
     });
     console.log('All news cards rendered');
   }
-  
+
   // Render dots
   function renderDots() {
     newsDots.innerHTML = '';
     const totalSlides = Math.ceil(newsData.length / slidesPerView);
-    
+
     for (let i = 0; i < totalSlides; i++) {
       const dot = document.createElement('div');
       dot.className = `slider-dot ${i === 0 ? 'active' : ''}`;
@@ -249,31 +249,31 @@ function initNewsSlider() {
       newsDots.appendChild(dot);
     }
   }
-  
+
   // Update slider position
   function updateSlider() {
     const translateX = -currentSlide * (100 / slidesPerView);
     newsTrack.style.transform = `translateX(${translateX}%)`;
-    
+
     // Update dots
     const dots = newsDots.querySelectorAll('.slider-dot');
     dots.forEach((dot, index) => {
       dot.classList.toggle('active', index === currentSlide);
     });
-    
+
     // Update button states
     const totalSlides = Math.ceil(newsData.length / slidesPerView);
     prevBtn.disabled = currentSlide === 0;
     nextBtn.disabled = currentSlide >= totalSlides - 1;
   }
-  
+
   // Go to specific slide
   function goToSlide(slideIndex) {
     const totalSlides = Math.ceil(newsData.length / slidesPerView);
     currentSlide = Math.max(0, Math.min(slideIndex, totalSlides - 1));
     updateSlider();
   }
-  
+
   // Next slide
   function nextSlide() {
     const totalSlides = Math.ceil(newsData.length / slidesPerView);
@@ -282,7 +282,7 @@ function initNewsSlider() {
       updateSlider();
     }
   }
-  
+
   // Previous slide
   function prevSlide() {
     if (currentSlide > 0) {
@@ -290,11 +290,11 @@ function initNewsSlider() {
       updateSlider();
     }
   }
-  
+
   // Event listeners
   nextBtn.addEventListener('click', nextSlide);
   prevBtn.addEventListener('click', prevSlide);
-  
+
   // Handle window resize
   window.addEventListener('resize', () => {
     updateSlidesPerView();
@@ -302,7 +302,7 @@ function initNewsSlider() {
     currentSlide = 0;
     updateSlider();
   });
-  
+
   // Auto-play (optional)
   let autoPlayInterval;
   function startAutoPlay() {
@@ -315,20 +315,20 @@ function initNewsSlider() {
       }
     }, 5000);
   }
-  
+
   function stopAutoPlay() {
     if (autoPlayInterval) {
       clearInterval(autoPlayInterval);
     }
   }
-  
+
   // Pause auto-play on hover
   const newsSlider = document.querySelector('.news-slider');
   if (newsSlider) {
     newsSlider.addEventListener('mouseenter', stopAutoPlay);
     newsSlider.addEventListener('mouseleave', startAutoPlay);
   }
-  
+
   // Initialize
   updateSlidesPerView();
   loadNewsData();
@@ -338,13 +338,13 @@ function initNewsSlider() {
 function initHeaderScroll() {
   const header = document.querySelector('.site-header');
   if (!header) return;
-  
+
   let lastScrollY = window.scrollY;
   let ticking = false;
-  
+
   function updateHeader() {
     const currentScrollY = window.scrollY;
-    
+
     if (currentScrollY > 100) { // Показывать/скрывать только после 100px
       if (currentScrollY > lastScrollY) {
         // Скролл вниз - скрыть хедер
@@ -357,18 +357,18 @@ function initHeaderScroll() {
       // В начале страницы всегда показывать
       header.style.transform = 'translateY(0)';
     }
-    
+
     lastScrollY = currentScrollY;
     ticking = false;
   }
-  
+
   function onScroll() {
     if (!ticking) {
       requestAnimationFrame(updateHeader);
       ticking = true;
     }
   }
-  
+
   window.addEventListener('scroll', onScroll, { passive: true });
 }
 
@@ -425,19 +425,19 @@ function initUI() {
   // Year in footer
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
-  
+
   // Initialize header scroll behavior
   initHeaderScroll();
-  
+
   // Initialize login form
-  initLoginForm();
-  
+  initInquiryForm();
+
   // Initialize register form
   initRegisterForm();
-  
+
   // Initialize news slider
   initNewsSlider();
-  
+
   // Initialize news modal
   // if (document.getElementById('news-modal')) {
   //   initNewsModal();
