@@ -256,6 +256,7 @@ input:focus, textarea:focus { box-shadow: 0 0 0 4px rgba(255,122,0,0.1), 0 1px 0
 .legal-header { text-align: center; margin-bottom: 48px; }
 .legal-header h1 { margin: 0 0 8px; font-size: 36px; font-weight: 600; }
 .legal-content { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 40px; box-shadow: var(--shadow); }
+.legal-content + .legal-content { margin-top: 24px; }
 .legal-content h2 { margin: 32px 0 16px; font-size: 24px; font-weight: 600; color: var(--text); }
 .legal-content h2:first-child { margin-top: 0; }
 .legal-content p { margin: 0 0 16px; line-height: 1.6; color: var(--text); }
@@ -263,6 +264,21 @@ input:focus, textarea:focus { box-shadow: 0 0 0 4px rgba(255,122,0,0.1), 0 1px 0
 .legal-content li { margin: 0 0 8px; line-height: 1.6; color: var(--text); }
 .legal-content a { color: var(--accent); text-decoration: none; }
 .legal-content a:hover { text-decoration: underline; }
+
+/* Legal content table styling */
+.legal-content table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 12px; }
+.legal-content th, .legal-content td { padding: 12px; text-align: left; }
+.legal-content thead th { background: #faf7f1; font-weight: 600; border-bottom: 2px solid rgba(0,0,0,0.28); }
+.legal-content tbody tr { border-top: 1px solid rgba(0,0,0,0.28); }
+.legal-content tbody tr:nth-child(even) { background: #fffdf9; }
+.legal-content tbody tr:first-child { border-top: 1px solid rgba(0,0,0,0.28); }
+.legal-content thead th + th, .legal-content tbody td + td { border-left: 1px solid rgba(0,0,0,0.28); }
+.legal-content table { border: 1px solid rgba(0,0,0,0.28); border-radius: 10px; overflow: hidden; }
+
+/* Card link wrappers */
+.card-link { display: block; text-decoration: none; color: inherit; }
+.card-link .legal-content { transition: transform .2s ease, box-shadow .25s ease; }
+.card-link:hover .legal-content { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.1); }
 
 /* News section */
 .news { padding: 80px 0; background: var(--bg); }
