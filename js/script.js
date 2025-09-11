@@ -164,6 +164,51 @@ function initInquiryForm() {
   });
 }
 
+function initEnglishOnlyForForms() {
+  const forms = [
+    document.getElementById('feedback-form'),
+    document.getElementById('inquiry-form')
+  ].filter(Boolean);
+
+  if (!forms.length) return;
+
+  const sanitizeToAscii = (value) => value.replace(/[^\x00-\x7E]/g, '');
+
+  const eligibleSelector = 'input[type="text"], input[type="email"], input[type="tel"], textarea';
+
+  forms.forEach((form) => {
+    form.querySelectorAll(eligibleSelector).forEach((field) => {
+      field.addEventListener('input', () => {
+        const sanitized = sanitizeToAscii(field.value);
+        if (sanitized !== field.value) {
+          const pos = field.selectionStart;
+          field.value = sanitized;
+          if (typeof pos === 'number') {
+            try { field.setSelectionRange(pos - 1, pos - 1); } catch {}
+          }
+        }
+      });
+
+      field.addEventListener('paste', (e) => {
+        e.preventDefault();
+        const clipboard = (e.clipboardData || window.clipboardData).getData('text');
+        const sanitized = sanitizeToAscii(clipboard);
+        const start = field.selectionStart || 0;
+        const end = field.selectionEnd || 0;
+        const before = field.value.slice(0, start);
+        const after = field.value.slice(end);
+        field.value = before + sanitized + after;
+        const caret = before.length + sanitized.length;
+        try { field.setSelectionRange(caret, caret); } catch {}
+      });
+
+      field.addEventListener('blur', () => {
+        field.value = sanitizeToAscii(field.value).trim();
+      });
+    });
+  });
+}
+
 function initRegisterForm() {
   const form = document.getElementById('register-form');
   if (!form) return;
@@ -522,6 +567,9 @@ function initUI() {
 
   // Initialize register form
   initRegisterForm();
+
+  // Enforce English-only input for key forms
+  initEnglishOnlyForForms();
 
   // Initialize news slider
   initNewsSlider();
