@@ -7,6 +7,94 @@ async function include(selector, url) {
   return container;
 }
 
+async function includeHTMLFragments() {
+  const nodes = Array.from(document.querySelectorAll('[data-include-html]'));
+  await Promise.all(nodes.map(async (el) => {
+    const url = el.getAttribute('data-include-html');
+    if (!url) return;
+    try {
+      const res = await fetch(url);
+      if (!res.ok) throw new Error('Failed to load component: ' + url);
+      const html = await res.text();
+      el.innerHTML = html;
+    } catch (err) {
+      console.error(err);
+      el.innerHTML = '<p class="muted">Failed to load content.</p>';
+    }
+  }));
+}
+
+async function openLegalModal(url, title) {
+  const overlay = document.getElementById('legal-modal');
+  const headerEl = document.getElementById('legal-modal-header');
+  const contentEl = document.getElementById('legal-modal-content');
+  if (!overlay || !headerEl || !contentEl) return;
+  try {
+    headerEl.innerHTML = '';
+    contentEl.innerHTML = '<p class="muted">Loading…</p>';
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('Failed to load: ' + url);
+    const html = await res.text();
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    const legalHeader = tmp.querySelector('.legal-header');
+    const legalContent = tmp.querySelector('.legal-content');
+    if (legalHeader) {
+      headerEl.innerHTML = legalHeader.innerHTML;
+    } else {
+      headerEl.innerHTML = `<h2>${title || 'Legal'}</h2>`;
+    }
+    contentEl.innerHTML = legalContent ? legalContent.innerHTML : html;
+    overlay.hidden = false;
+    document.body.style.overflow = 'hidden';
+  } catch (err) {
+    console.error(err);
+    if (headerEl && !headerEl.innerHTML) headerEl.innerHTML = `<h2>${title || 'Legal'}</h2>`;
+    contentEl.innerHTML = '<p class="muted">Failed to load content.</p>';
+    overlay.hidden = false;
+    document.body.style.overflow = 'hidden';
+  }
+}
+
+function closeLegalModal() {
+  const overlay = document.getElementById('legal-modal');
+  const contentEl = document.getElementById('legal-modal-content');
+  if (!overlay) return;
+  overlay.hidden = true;
+  const cookieModal = document.getElementById('cookie-consent-modal');
+  if (!cookieModal || cookieModal.hidden) {
+    document.body.style.overflow = '';
+  }
+  if (contentEl) contentEl.innerHTML = '';
+}
+
+function initLegalModalLinks() {
+  const overlay = document.getElementById('legal-modal');
+  const closeBtn = document.getElementById('legal-modal-close');
+  if (closeBtn) closeBtn.addEventListener('click', closeLegalModal);
+  if (overlay) {
+    overlay.addEventListener('click', (e) => {
+      if (e.target === overlay) closeLegalModal();
+    });
+  }
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLegalModal();
+  });
+
+  function attachHandlers(root = document) {
+    root.querySelectorAll('[data-legal-url]').forEach((a) => {
+      a.addEventListener('click', async (e) => {
+        e.preventDefault();
+        const url = a.getAttribute('data-legal-url');
+        const title = a.getAttribute('data-legal-title') || a.textContent?.trim() || 'Legal';
+        if (url) await openLegalModal(url, title);
+      });
+    });
+  }
+
+  attachHandlers(document);
+}
+
 function initForm() {
   const form = document.getElementById('feedback-form');
   if (!form) return;
@@ -442,6 +530,9 @@ function initUI() {
   // if (document.getElementById('news-modal')) {
   //   initNewsModal();
   // }
+
+  // Initialize legal modal links
+  initLegalModalLinks();
 }
 
 function setCookie(name, value, days) {
@@ -497,6 +588,7 @@ function initCookieConsent() {
 document.addEventListener('DOMContentLoaded', async () => {
   await include('header[data-include]', './components/header.html');
   await include('footer[data-include]', './components/footer.html');
+  await includeHTMLFragments();
   initUI();
   initForm();
   initCookieConsent(); // Initialize cookie consent

@@ -12,8 +12,28 @@
 <body>
   <div class="access-denied-container">
     <h1>Access Denied</h1>
-    <p>Access to this website requires agreement to our <a style="color: #ff7a00" href="./data-sovereignty-protocol.html">Data Sovereignty Protocol</a> and <a style="color: #ff7a00" href="./access-agreement.html">Access Agreement</a>. Your request to access has been denied.</p>
+    <p>Access to this website requires agreement to our <a style="color: #ff7a00" href="#" data-legal-url="./components/data-sovereignty-protocol-section.html" data-legal-title="Data Sovereignty Protocol">Data Sovereignty Protocol</a> and <a style="color: #ff7a00" href="#" data-legal-url="./components/access-agreement-section.html" data-legal-title="Access Agreement">Access Agreement</a>. Your request to access has been denied.</p>
     <a href="./index.html" class="btn primary">Go to Home Page</a>
   </div>
+
+  <!-- Legal Modal -->
+  <div class="modal-overlay" id="legal-modal" hidden>
+    <div class="modal-container">
+      <div class="modal-header">
+        <div id="legal-modal-header"></div>
+        <button class="modal-close" id="legal-modal-close" aria-label="Close legal modal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-content" id="legal-modal-content">
+        <!-- legal content will be injected here -->
+      </div>
+    </div>
+  </div> 
+
+  <script src="./js/script.js?v=20250114"></script>
 </body>
 </html>

@@ -420,3 +420,7 @@ main { flex: 1 0 auto;
 .contacts {
   padding: 80px 0 48px; 
 }
+
+/* Legal Modal should be above cookie consent */
+#legal-modal { z-index: 1100; }
+#legal-modal .modal-container { max-width: 800px; }
