@@ -112,52 +112,61 @@ img { display: block; max-width: 100%; height: auto; }
 .adv-item p { margin: 0;}
 
 /* Contacts */
-.contacts { padding: 36px 0 48px; }
-
 .contacts-grid {
   display: flex;
-  flex-direction: column; 
-  align-items: center;    
-  justify-content: center; 
+  flex-direction: row; /* Горизонтально на десктопе */
+  align-items: stretch; /* Растянуть блоки по высоте */
+  justify-content: space-between;
   width: 100%;
-  min-height: 400px; 
-  gap: 18px; 
+  gap: 24px;
+}
+
+.contacts-info, .contacts-map {
+  flex: 1; /* Одинаковая ширина */
+  display: flex;
+  flex-direction: column;
 }
 
 .contacts-info {
   background: #fff;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 18px;
+  padding: 12px 14px; /* Меньше внутренние отступы */
   box-shadow: var(--shadow);
+  line-height: 1.5; /* Оптимальный межстрочный интервал */
 }
+
 
 .contacts-map {
-  display: flex;
-  justify-content: center;
-  align-items: center;     
-  width: 100%;
-  min-height: 300px;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.contacts-map img {
-  display: block;
-  max-width: 100%; 
-  width: auto;    
-  height: auto;
+  background: #fff;
+  border: 1px solid var(--border);
   border-radius: var(--radius);
+  padding: 18px;
   box-shadow: var(--shadow);
+  justify-content: center; /* Центрируем карту по вертикали */
+  align-items: center;
 }
 
 .contacts-map img {
-  display: block;
   width: 100%;
   height: auto;
   border-radius: var(--radius);
   box-shadow: var(--shadow);
 }
+
+@media (max-width: 1024px) {
+  .contacts-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .contacts-map {
+    max-width: 100%;
+    margin-top: 18px;
+  }
+}
+
+
 
 contacts-info a {
   color: var(--accent);
