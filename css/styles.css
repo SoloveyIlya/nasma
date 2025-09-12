@@ -322,12 +322,13 @@ img { display: block; max-width: 100%; height: auto; }
 }
 
 .footer-nav a {
-  color: var(--text);
+  color: orange;
   text-decoration: none;
   padding: 2px 0;
   display: inline-block;
   transition: color 0.2s ease;
 }
+
 
 .footer-nav a + a {
   border-left: 1px solid var(--border);
@@ -382,7 +383,7 @@ img { display: block; max-width: 100%; height: auto; }
 
 .footer-dso {
   color: var(--text);
-  font-weight: 600; /* Bolder font for DSO-FZCO-29798 */
+  font-weight: 400; /* Bolder font for DSO-FZCO-29798 */
 }
 
 .footer-copy {
