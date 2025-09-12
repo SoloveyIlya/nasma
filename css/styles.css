@@ -313,11 +313,7 @@ img { display: block; max-width: 100%; height: auto; }
 }
 
 .footer-nav a {
-<<<<<<< HEAD
   color: var(--accent);
-=======
-  color: orange;
->>>>>>> origin/eugene-branch
   text-decoration: none;
   padding: 2px 0;
   display: inline-block;
