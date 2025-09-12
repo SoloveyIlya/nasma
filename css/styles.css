@@ -313,7 +313,7 @@ img { display: block; max-width: 100%; height: auto; }
 }
 
 .footer-nav a {
-  color: var(--text);
+  color: var(--accent);
   text-decoration: none;
   padding: 2px 0;
   display: inline-block;
