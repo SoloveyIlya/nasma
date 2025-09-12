@@ -313,13 +313,26 @@ img { display: block; max-width: 100%; height: auto; }
 }
 
 .footer-nav a {
+<<<<<<< HEAD
   color: var(--accent);
+=======
+  color: orange;
+>>>>>>> origin/eugene-branch
   text-decoration: none;
   padding: 2px 0;
   display: inline-block;
   transition: color 0.2s ease;
 }
 
+<<<<<<< HEAD
+=======
+
+.footer-nav a + a {
+  border-left: 1px solid var(--border);
+  padding-left: 8px;
+}
+
+>>>>>>> origin/eugene-branch
 .footer-nav a:hover {
   color: var(--accent);
 }
@@ -367,7 +380,11 @@ img { display: block; max-width: 100%; height: auto; }
 }
 
 .footer-dso {
+<<<<<<< HEAD
   color: var(--muted);
+=======
+  color: var(--text);
+>>>>>>> origin/eugene-branch
   font-weight: 400; /* Bolder font for DSO-FZCO-29798 */
 }
 
