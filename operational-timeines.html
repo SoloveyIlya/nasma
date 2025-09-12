@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Operational Timeline | NASMA INTERNATIONAL – FZCO</title>
+  <meta name="description" content="Operational Timeline of NASMA INTERNATIONAL – FZCO: latest updates and news." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/gilroy-bold?styles=20876,20878" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css?v=20250109" />
+  <style>
+
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: var(--bg); /* основной фон */
+}
+
+main {
+  background: var(--bg); /* чтобы контент тоже имел фон */
+  flex: 1;
+}
+
+
+    .site-header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      height: 70px;
+      backdrop-filter: blur(8px); 
+      background: rgba(245,239,230,0.72); 
+      border-bottom: 1px solid var(--border);
+    }
+    
+    main {
+      flex: 1;
+      margin-top: 70px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .section-head {
+        margin-bottom: 2.5 rem; 
+    }       
+    
+    .operational-timeline-container {
+      display: flex;
+      flex: 1; 
+      min-height: calc(100vh - 70px); 
+    }
+
+    .timeline-image-wrapper {
+      position: relative;
+      width: 40%;
+      overflow: hidden;
+    }
+
+    .timeline-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .timeline-content {
+      width: 60%;
+      padding: 3rem 4rem;
+      background-color: var(--card);
+      overflow-y: auto;
+    }
+
+    .news-item {
+      margin-bottom: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .news-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    .news-date {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 1rem;
+    }
+
+    .news-description {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+      color: var(--text);
+    }
+
+    .news-toggle {
+      background: none;
+      border: none;
+      color: var(--accent);
+      cursor: pointer;
+      font-size: 0.9rem;
+      padding: 0;
+      text-decoration: underline;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .news-toggle:hover {
+      color: var(--text);
+    }
+
+    .news-tag {
+      display: inline-block;
+      background: var(--bg);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      margin-left: 0.8rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .timeline-content {
+        padding: 2rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .operational-timeline-container {
+        flex-direction: column;
+      }
+      
+      .timeline-image-wrapper {
+        width: 100%;
+        height: 300px; 
+        position: relative;
+      }
+      
+      .timeline-content {
+        width: 100%;
+        padding: 2rem 1.5rem;
+        overflow-y: visible;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .timeline-content {
+        padding: 1.5rem 1rem;
+      }
+      
+      .news-title {
+        font-size: 1.3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  
+  <!-- Header will be included here -->
+  <header data-include class="site-header"></header>
+
+  <main id="main">
+    <div class="operational-timeline-container">
+      <div class="timeline-image-wrapper">
+        <img src="/img/about.png" alt="About NASMA International" class="timeline-image">
+      </div>
+      
+      <div class="timeline-content">
+        <div class="section-head">
+          <h2 class="reveal-up">Operational Timeline</h2>
+        </div>
+        
+        <div id="news-container">
+          <!-- News items will be loaded here -->
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer will be included here -->
+  <footer data-include></footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Load header and footer
+      const headerInclude = document.querySelector('header[data-include]');
+      const footerInclude = document.querySelector('footer[data-include]');
+      
+      if (headerInclude) {
+        fetch('/components/header.html')
+          .then(response => response.text())
+          .then(data => {
+            headerInclude.innerHTML = data;
+            // Update active link
+            const currentPage = window.location.pathname.split('/').pop();
+            const navLinks = headerInclude.querySelectorAll('.nav-links a');
+            navLinks.forEach(link => {
+              if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+              }
+            });
+          })
+          .catch(error => {
+            console.error('Error loading header:', error);
+          });
+      }
+      
+      if (footerInclude) {
+        fetch('/components/footer.html')
+          .then(response => response.text())
+          .then(data => {
+            footerInclude.innerHTML = data;
+          })
+          .catch(error => {
+            console.error('Error loading footer:', error);
+          });
+      }
+      
+      // Load and display news
+      fetch('/data/OperationalTimeline.json')
+        .then(response => response.json())
+        .then(newsItems => {
+          const container = document.getElementById('news-container');
+          
+          // Sort news by date (newest first)
+          newsItems.sort((a, b) => new Date(b.date) - new Date(a.date));
+          
+          newsItems.forEach((item, index) => {
+            const newsElement = document.createElement('div');
+            newsElement.className = 'news-item reveal-up';
+            if (index > 0) {
+              newsElement.classList.add(`delay-${index % 3}`);
+            }
+            
+            const title = document.createElement('h3');
+            title.className = 'news-title';
+            title.textContent = item.title;
+            
+            if (item.tag) {
+              const tag = document.createElement('span');
+              tag.className = 'news-tag';
+              tag.textContent = item.tag;
+              title.appendChild(tag);
+            }
+            
+            const date = document.createElement('p');
+            date.className = 'news-date';
+            date.textContent = formatDate(item.date);
+            
+            const description = document.createElement('div');
+            description.className = 'news-description';
+            
+            // Store full description in data attribute
+            description.setAttribute('data-full-text', item.description);
+            
+            // Show only first 50 characters initially
+            const shortText = truncateText(item.description, 50);
+            description.textContent = shortText;
+            
+            const toggleButton = document.createElement('button');
+            toggleButton.className = 'news-toggle';
+            toggleButton.textContent = shortText.length < item.description.length ? 'Show more' : '';
+            
+            toggleButton.addEventListener('click', function() {
+              if (description.textContent.length === item.description.length) {
+                description.textContent = truncateText(item.description, 50);
+                toggleButton.textContent = 'Show more';
+              } else {
+                description.textContent = item.description;
+                toggleButton.textContent = 'Show less';
+              }
+            });
+            
+            newsElement.appendChild(title);
+            newsElement.appendChild(date);
+            newsElement.appendChild(description);
+            
+            if (shortText.length < item.description.length) {
+              newsElement.appendChild(toggleButton);
+            }
+            
+            container.appendChild(newsElement);
+          });
+          
+          // Initialize reveal animations
+          setTimeout(initRevealAnimations, 100);
+        })
+        .catch(error => {
+          console.error('Error loading news:', error);
+          document.getElementById('news-container').innerHTML = 
+            '<p class="reveal-up">Unable to load news at this time. Please try again later.</p>';
+        });
+      
+      function truncateText(text, maxLength) {
+        if (text.length <= maxLength) return text;
+        return text.substr(0, maxLength) + '...';
+      }
+      
+      function formatDate(dateString) {
+        const options = { day: 'numeric', month: 'long', year: 'numeric' };
+        return new Date(dateString).toLocaleDateString('en-US', options);
+      }
+      
+      function initRevealAnimations() {
+        const elements = document.querySelectorAll('.reveal-up');
+        elements.forEach(el => {
+          const elementTop = el.getBoundingClientRect().top;
+          const elementVisible = 150;
+          if (elementTop < window.innerHeight - elementVisible) {
+            el.classList.add('visible');
+          }
+        });
+      }
+      
+      // Add scroll event listener for reveal animations
+      window.addEventListener('scroll', initRevealAnimations);
+    });
+  </script>
+</body>
+</html>
