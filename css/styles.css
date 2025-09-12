@@ -5,14 +5,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap'); /* Roboto Mono as fallback */
 
 :root {
-  --bg: #f5efe6;
+  --bg: #fffefb;
   --text: #121212;
-  --accent: #ff7a00;
+  --accent: #00843D;
   --muted: #6b6b6b;
   --card: #ffffff;
   --border: rgba(0,0,0,0.08);
   --radius: 14px;
   --shadow: 0 6px 24px rgba(0,0,0,0.08);
+  --header-height: 64px;
 }
 
 * { box-sizing: border-box; }
@@ -28,6 +29,7 @@ body {
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  padding-top: var(--header-height);
 }
 
 /* Headings */
@@ -125,7 +127,6 @@ img { display: block; max-width: 100%; height: auto; }
   left: 0; 
   right: 0; 
   backdrop-filter: blur(8px); 
-  background: rgba(245,239,230,0.72); 
   z-index: 40; 
   border-bottom: 1px solid var(--border);
   transition: transform 0.3s ease;

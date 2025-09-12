@@ -637,6 +637,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   await include('header[data-include]', './components/header.html');
   await include('footer[data-include]', './components/footer.html');
   await includeHTMLFragments();
+  // Compute header height and set CSS var for global top padding
+  const setHeaderHeightVar = () => {
+    const header = document.querySelector('.site-header');
+    const h = header ? header.getBoundingClientRect().height : 64;
+    document.documentElement.style.setProperty('--header-height', `${Math.round(h)}px`);
+  };
+  setHeaderHeightVar();
+  window.addEventListener('resize', setHeaderHeightVar);
+  // Recalculate when images in header load (e.g., logo)
+  const logoImg = document.querySelector('.site-header img');
+  if (logoImg && !logoImg.complete) {
+    logoImg.addEventListener('load', setHeaderHeightVar, { once: true });
+  }
   initUI();
   initForm();
   initCookieConsent(); // Initialize cookie consent
