@@ -368,7 +368,7 @@ img { display: block; max-width: 100%; height: auto; }
 
 .footer-dso {
   color: var(--muted);
-  font-weight: 600; /* Bolder font for DSO-FZCO-29798 */
+  font-weight: 400; /* Bolder font for DSO-FZCO-29798 */
 }
 
 .footer-copy {
