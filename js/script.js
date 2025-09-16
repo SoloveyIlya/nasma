@@ -144,12 +144,11 @@ function initInquiryForm() {
       submitBtn?.classList.add('loading');
       submitBtn?.setAttribute('disabled', 'true');
       await new Promise(r => setTimeout(r, 1200));
-      form.reset(); // Сбросить форму после успешной отправки
+      form.reset(); 
       if (note) {
         note.hidden = false;
         note.textContent = 'Thank you. Your inquiry has been received and will be reviewed by our committee. Please note that a response is not guaranteed and may take several weeks. Direct follow-ups will not be acknowledged.';
-        // Опционально: скрыть сообщение через несколько секунд
-        // setTimeout(() => { note.hidden = true; }, 10000);
+       
       }
     } catch (err) {
       if (note) {
@@ -330,7 +329,7 @@ function initNewsSlider() {
     newsData.forEach((news, index) => {
       const newsCard = document.createElement('div');
       newsCard.className = 'news-card';
-      // Обрезаем описание до одной строки (максимум 100 символов, без переноса)
+      
       let shortDesc = news.description;
       if (shortDesc.length > 50) {
         shortDesc = shortDesc.slice(0, 50).trim() + '…';
@@ -478,16 +477,16 @@ function initHeaderScroll() {
   function updateHeader() {
     const currentScrollY = window.scrollY;
 
-    if (currentScrollY > 100) { // Показывать/скрывать только после 100px
+    if (currentScrollY > 100) { 
       if (currentScrollY > lastScrollY) {
-        // Скролл вниз - скрыть хедер
+        
         header.style.transform = 'translateY(-100%)';
       } else {
-        // Скролл вверх - показать хедер
+        
         header.style.transform = 'translateY(0)';
       }
     } else {
-      // В начале страницы всегда показывать
+      
       header.style.transform = 'translateY(0)';
     }
 
