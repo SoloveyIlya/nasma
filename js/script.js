@@ -655,3 +655,22 @@ document.addEventListener('DOMContentLoaded', async () => {
   initCookieConsent(); // Initialize cookie consent
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const hasAccess = localStorage.getItem("requestAccess") === "true";
+
+  if (hasAccess) {
+    
+    const desktopLink = document.querySelector('#desktop-menu a[href="./request-access.html"]');
+    if (desktopLink) {
+      desktopLink.textContent = "Vetting Protocol";
+      desktopLink.setAttribute("href", "#"); 
+    }
+
+   
+    const mobileLink = document.querySelector('#mobile-menu a[href="./request-access.html"]');
+    if (mobileLink) {
+      mobileLink.textContent = "Vetting Protocol";
+      mobileLink.setAttribute("href", "#");
+    }
+  }
+});
