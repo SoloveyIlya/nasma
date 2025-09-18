@@ -71,6 +71,18 @@ h3 { font-size: 18px; font-weight: 500; } /* Gilroy Medium for H3 */
   box-shadow: var(--shadow);
 }
 
+hr {
+  border: none;
+}
+hr::before {
+  content: '';
+  display: inline-block;
+  width: 30%;
+  height: 4px;
+  border-radius: 8px;
+  background: var(--accent);
+}
+
 /* Form inputs, including referral codes and IDs */
 input[type="text"], input[type="email"], input[type="tel"], input[type="password"], textarea, select {
   width: 100%;
@@ -216,6 +228,7 @@ img { display: block; max-width: 100%; height: auto; }
 .about-card:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(0,0,0,0.08); }
 .about-card h3 { margin: 0 0 6px; font-size: 18px; }
 .about-card p { margin: 0; color: var(--muted); }
+.about-img { border-radius: 20px; }
 
 /* Section head */
 .section-head { display: flex; gap: 18px; margin-bottom: 28px; align-items: baseline; }
