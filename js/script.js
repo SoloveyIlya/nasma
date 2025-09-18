@@ -558,8 +558,7 @@ function initUI() {
   const yearEl = document.getElementById('year');
   if (yearEl) yearEl.textContent = String(new Date().getFullYear());
 
-  // Initialize header scroll behavior
-  initHeaderScroll();
+  // Keep header static (no hide-on-scroll)
 
   // Initialize login form
   initInquiryForm();
