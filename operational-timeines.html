@@ -179,7 +179,7 @@ header {
   <main id="main">
     <div class="operational-timeline-container">
       <div class="timeline-image-wrapper">
-        <img src="/img/about.png" alt="About NASMA International" class="timeline-image">
+        <img src="/img/operational-timeline-img.jpg" alt="About NASMA International" class="timeline-image">
       </div>
       
       <div class="timeline-content">
@@ -208,7 +208,7 @@ header {
           
           newsItems.forEach((item, index) => {
             const newsElement = document.createElement('div');
-            newsElement.className = 'news-item reveal-up';
+            newsElement.className = 'news-item';
             if (index > 0) {
               newsElement.classList.add(`delay-${index % 3}`);
             }
