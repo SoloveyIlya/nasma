@@ -509,23 +509,70 @@ function initUI() {
   const drawer = document.getElementById('mobile-menu');
 
   if (burger && drawer) {
-    const toggleMenu = () => {
-      const isOpen = burger.classList.toggle('active');
-      burger.setAttribute('aria-expanded', String(isOpen));
-      if (isOpen) {
-        drawer.hidden = false;
-        requestAnimationFrame(() => drawer.classList.add('open'));
-      } else {
-        drawer.classList.remove('open');
-        drawer.addEventListener('transitionend', () => {
-          if (!drawer.classList.contains('open')) drawer.hidden = true;
-        }, { once: true });
+    let hideFallbackTimer = null;
+
+    const onKeydown = (e) => {
+      if (e.key === 'Escape' && burger.classList.contains('active')) {
+        closeMenu();
       }
     };
-    burger.addEventListener('click', toggleMenu);
+
+    const onClickOutside = (e) => {
+      if (!drawer.contains(e.target) && !burger.contains(e.target) && burger.classList.contains('active')) {
+        closeMenu();
+      }
+    };
+
+    const openMenu = () => {
+      burger.classList.add('active');
+      burger.setAttribute('aria-expanded', 'true');
+      drawer.hidden = false;
+      requestAnimationFrame(() => drawer.classList.add('open'));
+      document.addEventListener('click', onClickOutside);
+      document.addEventListener('keydown', onKeydown);
+    };
+
+    const closeMenu = () => {
+      burger.classList.remove('active');
+      burger.setAttribute('aria-expanded', 'false');
+      drawer.classList.remove('open');
+      // Ensure hidden even if transitionend doesn't fire on some mobile browsers
+      if (hideFallbackTimer) clearTimeout(hideFallbackTimer);
+      const hide = () => { if (!drawer.classList.contains('open')) drawer.hidden = true; };
+      drawer.addEventListener('transitionend', hide, { once: true });
+      hideFallbackTimer = setTimeout(hide, 350);
+      document.removeEventListener('click', onClickOutside);
+      document.removeEventListener('keydown', onKeydown);
+    };
+
+    const toggleMenu = () => {
+      if (burger.classList.contains('active')) closeMenu(); else openMenu();
+    };
+
+    let lastToggleTs = 0;
+    const onBurgerActivate = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const now = Date.now();
+      if (now - lastToggleTs < 250) return; // debounce duplicate events on mobile
+      lastToggleTs = now;
+      toggleMenu();
+    };
+    burger.addEventListener('click', onBurgerActivate, { passive: false });
+    burger.addEventListener('touchend', onBurgerActivate, { passive: false });
+    if (window.PointerEvent) burger.addEventListener('pointerup', onBurgerActivate, { passive: false });
+
+    // Close when any link in the drawer is tapped (covers tapping around text too)
+    drawer.querySelectorAll('a').forEach((a) => {
+      a.addEventListener('click', () => closeMenu());
+    });
+
+    // Additionally, if user taps anywhere inside the drawer area, close it
     drawer.addEventListener('click', (e) => {
-      const target = e.target;
-      if (target.tagName === 'A') toggleMenu();
+      // Prevent re-closing if already closing
+      if (!burger.classList.contains('active')) return;
+      const isInsideLink = e.target.closest && e.target.closest('a');
+      if (!isInsideLink) closeMenu();
     });
   }
 
