@@ -102,7 +102,7 @@
       </div>
     </div>
   </div>
-  
+
   <script>
     document.addEventListener("scroll", () => {
       const header = document.querySelector(".site-header");
@@ -112,6 +112,20 @@
         header.classList.remove("scrolled");
       }
     });
+  </script>
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+  const header = document.querySelector('.site-header');
+
+  window.addEventListener('scroll', function() {
+    if (window.scrollY > 10) { // если скролл больше 10px
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+  });
+});
   </script>
   
 </body>
