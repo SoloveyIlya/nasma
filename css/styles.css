@@ -141,27 +141,64 @@ img { display: block; max-width: 100%; height: auto; }
 .skip-link:focus { position: static; width: auto; height: auto; padding: 8px 12px; background: var(--accent); color: #fff; }
 
 /* Header */
+/* Default header appearance for non-home pages (soft translucent) */
 .site-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  backdrop-filter: blur(8px);
   z-index: 40;
-  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.72); /* soft translucent background for pages without hero */
+  backdrop-filter: blur(6px);
+  border-bottom: none; /* Remove border for seamless look */
+  transition: background .3s ease; /* Smooth transition for potential hover effects */
+  height: var(--header-height);
 }
+
+/* On the homepage: header must be transparent so hero image shows through */
+.home .site-header {
+
+  background: transparent;
+  backdrop-filter: none;
+  border-bottom: none;
+  height: var(--header-height);
+}
+
+.site-header.scrolled {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  height: calc(var(--header-height) + 12px); 
+}
+
+
+/* mobile/home header adjustments (remain transparent) */
+@media (max-width: 820px) {
+  .home .site-header {
+    background: transparent;
+    backdrop-filter: none;
+  }
+}
+
 .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; }
 .logo { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; font-weight: 700; }
-/* .logo img { width: 50px; height: 50px; object-fit: contain; } */
 .logo img { width: 220px; height: auto; object-fit: contain; }
 .logo-text { letter-spacing: 0.2px; }
+
 
 .nav { display: flex; align-items: center; gap: 18px; }
 .nav-links { list-style: none; display: flex; gap: 22px; margin: 0; padding: 0; }
 .nav-links a { text-decoration: none; color: var(--text); padding: 6px 8px; border-radius: 10px; transition: background .25s ease, color .25s ease, transform .2s ease; }
-.nav-links a:hover { background: #fff; color: var(--accent); transform: translateY(-1px); box-shadow: 0 6px 14px rgba(0,0,0,0.06); }
+.nav-links a,
+.mobile-drawer a {
+  font-size: 14px; 
+}
+.nav-links a:hover { background: rgba(255, 255, 255, 0.8); color: var(--accent); transform: translateY(-1px); box-shadow: 0 6px 14px rgba(0,0,0,0.06); }
 
-.burger { display: none; width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--border); background: #fff; align-items: center; justify-content: center; gap: 5px; flex-direction: column; padding: 8px; cursor: pointer; transition: transform .2s ease, box-shadow .25s ease; }
+
+.burger { display: none; width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--border); background: transparent; align-items: center; justify-content: center; gap: 5px; flex-direction: column; padding: 8px; cursor: pointer; transition: transform .2s ease, box-shadow .25s ease; }
 .burger:hover { transform: translateY(-1px); box-shadow: var(--shadow); }
 .burger span { display: block; width: 20px; height: 2px; background: var(--text); border-radius: 2px; transition: transform .25s ease, opacity .25s ease; }
 .burger.active span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
@@ -175,14 +212,15 @@ img { display: block; max-width: 100%; height: auto; }
 .mobile-drawer a:hover { background: var(--bg); color: var(--accent); }
 
 /* Hero */
+/* Hero holds the background image and is pulled up under the fixed header so header appears transparent */
 .home .hero {
-  /* padding: 96px 0 88px; */
   padding: 0;
   display: flex;
   align-items: center;
-  margin-top: 0;
+  margin-top: calc(-1 * var(--header-height)); /* pull hero up under fixed header */
+  padding-top: var(--header-height); /* keep content below header */
   position: relative;
-  background: url('../img/zerkalfon.JPG') center/cover no-repeat;
+  background: url('../img/zerkalfon.JPG') center top/cover no-repeat;
   min-height: 100vh;
 }
 .home .hero::before {
@@ -193,7 +231,6 @@ img { display: block; max-width: 100%; height: auto; }
   background: linear-gradient(to right, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.9) 18%, rgba(255,255,255,0.72) 34%, rgba(255,255,255,0.36) 52%, rgba(255,255,255,0.08) 72%, rgba(255,255,255,0) 100%);
 }
 .hero { margin-top: 0; }
-
 
 .site-header::after { display: none; content: none; }
 .hero-inner { display: grid; grid-template-columns: 1.2fr 1fr; align-items: center; gap: 36px; position: relative; z-index: 1; }
@@ -821,3 +858,67 @@ main { flex: 1 0 auto; }
 /* Legal Modal should be above cookie consent */
 #legal-modal { z-index: 1100; }
 #legal-modal .modal-container { max-width: 800px; }
+
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+  font-weight: 700;
+
+
+  transform: translateY(-1px);
+  transition: transform .18s ease;
+}
+
+
+.logo img {
+  width: 220px;
+  height: auto;
+  object-fit: contain;
+  display: block;
+
+  
+  transform: translateY(-6px);
+  transition: transform .18s ease;
+}
+
+
+.logo-text {
+  letter-spacing: 0.2px;
+  transform: translateY(-2px);
+  transition: transform .18s ease;
+}
+
+
+@media (max-width: 820px) {
+  .logo,
+  .logo img {
+    transform: translateY(-3px);
+  }
+  .logo-text {
+    transform: translateY(-1px);
+  }
+}
+
+/* Login button */
+.btn-login {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 9999px;
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  text-decoration: none;
+  background: var(--bg); 
+  color: var(--accent) !important; 
+  border: none;
+  transition: transform .2s ease, box-shadow .25s ease, background .25s ease;
+}
+
+.btn-login:hover {
+  background: #005fcc; 
+  transform: translateY(-2px);
+  box-shadow: var(--shadow);
+}
