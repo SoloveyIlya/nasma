@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Login | NASMA INTERNATIONAL – FZCO</title>
+  <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./css/styles.css?v=20250115" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header data-include></header>
+
+  <main id="main">
+    <section class="login-section">
+      <div class="login-container">
+        <div class="login-header">
+          <h1>Login</h1>
+          <p class="muted">Access your account</p>
+        </div>
+        <form id="login-form" class="login-form" novalidate>
+          <div class="form-grid">
+            <div class="form-field fl form-col-2">
+              <input type="email" id="login-email" name="email" required />
+              <label for="login-email">Email address</label>
+            </div>
+            <div class="form-field fl form-col-2">
+              <input type="password" id="login-password" name="password" required />
+              <label for="login-password">Password</label>
+            </div>
+          </div>
+          <div class="form-options">
+            <label class="checkbox">
+              <input type="checkbox" id="remember" name="remember" />
+              <span>Remember me</span>
+            </label>
+            <a class="forgot-link" href="#">Forgot password?</a>
+          </div>
+          <div class="form-actions">
+            <button class="btn primary full-width" id="login-submit" type="submit">Login</button>
+          </div>
+          <p class="form-note" id="login-note" hidden></p>
+        </form>
+        <div class="login-footer">
+          <p>Don’t have an account? <a href="./request-access.html">Request access</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer data-include></footer>
+
+  <script src="./js/script.js?v=20250115"></script>
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('login-form');
+    const note = document.getElementById('login-note');
+    const submit = document.getElementById('login-submit');
+    if (!form) return;
+    form.addEventListener('submit', async function (e) {
+      e.preventDefault();
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      try {
+        submit?.classList.add('loading');
+        submit?.setAttribute('disabled', 'true');
+        await new Promise(r => setTimeout(r, 900));
+        if (note) {
+          note.hidden = false;
+          note.textContent = 'Logged in (demo). Redirecting…';
+          note.style.color = 'var(--accent)';
+        }
+        setTimeout(() => { window.location.href = './index.html'; }, 900);
+      } catch (_) {
+        if (note) {
+          note.hidden = false;
+          note.textContent = 'Login failed. Please try again later.';
+          note.style.color = '#e74c3c';
+        }
+      } finally {
+        submit?.classList.remove('loading');
+        submit?.removeAttribute('disabled');
+      }
+    });
+  });
+  </script>
+</body>
+</html>
+
+
+
