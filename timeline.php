@@ -1,13 +1,13 @@
 <?php
 // timeline.php
-// CRUD API + минимальный UI для файла data/OperationalTimeline.json
+// CRUD API + minimal UI for data/OperationalTimeline.json
 
 declare(strict_types=1);
 header('X-Content-Type-Options: nosniff');
 
 const FILE_PATH = __DIR__ . '/data/OperationalTimeline.json';
 
-// ---------- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ----------
+// ---------- HELPER FUNCTIONS ----------
 
 function respond_json($code, $payload) {
     http_response_code($code);
@@ -17,9 +17,7 @@ function respond_json($code, $payload) {
 }
 
 function read_json_file(): array {
-    if (!file_exists(FILE_PATH)) {
-        return [];
-    }
+    if (!file_exists(FILE_PATH)) return [];
     $raw = file_get_contents(FILE_PATH);
     if ($raw === false || $raw === '') return [];
     $data = json_decode($raw, true);
@@ -33,9 +31,7 @@ function write_json_file(array $data): void {
     }
 
     $tmp = tempnam(sys_get_temp_dir(), 'timeline_');
-    if ($tmp === false) {
-        respond_json(500, ['ok'=>false, 'error'=>'Cannot create temp file']);
-    }
+    if ($tmp === false) respond_json(500, ['ok'=>false, 'error'=>'Cannot create temp file']);
 
     $pretty = json_encode($data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
     if ($pretty === false) {
@@ -48,10 +44,7 @@ function write_json_file(array $data): void {
         respond_json(500, ['ok'=>false, 'error'=>'Cannot write temp file']);
     }
 
-    // Бэкап (best-effort)
-    if (file_exists(FILE_PATH)) {
-        @copy(FILE_PATH, FILE_PATH . '.' . date('Ymd_His') . '.bak');
-    }
+    if (file_exists(FILE_PATH)) @copy(FILE_PATH, FILE_PATH . '.' . date('Ymd_His') . '.bak');
 
     if (!@rename($tmp, FILE_PATH)) {
         @unlink($tmp);
@@ -67,7 +60,6 @@ function read_json_body(): array {
         $data = json_decode($raw, true);
         return is_array($data) ? $data : [];
     }
-    // поддержка form-urlencoded
     if (!empty($_POST)) return $_POST;
     parse_str($raw, $parsed);
     return is_array($parsed) ? $parsed : [];
@@ -78,41 +70,31 @@ function validate_item(array $item): array {
     $title = trim((string)($item['title'] ?? ''));
     $description = trim((string)($item['description'] ?? ''));
 
-    // простая проверка даты YYYY-MM-DD
     if ($date === '' || !preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
         respond_json(422, ['ok'=>false, 'error'=>'Field "date" must be YYYY-MM-DD']);
     }
-    if ($title === '') {
-        respond_json(422, ['ok'=>false, 'error'=>'Field "title" is required']);
-    }
-    if ($description === '') {
-        respond_json(422, ['ok'=>false, 'error'=>'Field "description" is required']);
-    }
+    if ($title === '') respond_json(422, ['ok'=>false, 'error'=>'Field "title" is required']);
+    if ($description === '') respond_json(422, ['ok'=>false, 'error'=>'Field "description" is required']);
     return ['date'=>$date, 'title'=>$title, 'description'=>$description];
 }
 
 function get_index_from_params(array $params): int {
-    // index может приходить в query (?index=) или в теле
     $idx = $params['index'] ?? ($_GET['index'] ?? null);
-    if ($idx === null || $idx === '') {
-        respond_json(400, ['ok'=>false, 'error'=>'Missing "index"']);
-    }
-    if (!is_numeric($idx)) {
-        respond_json(400, ['ok'=>false, 'error'=>'"index" must be numeric']);
-    }
+    if ($idx === null || $idx === '') respond_json(400, ['ok'=>false, 'error'=>'Missing "index"']);
+    if (!is_numeric($idx)) respond_json(400, ['ok'=>false, 'error'=>'"index" must be numeric']);
     return (int)$idx;
 }
 
-// ---------- API РОУТИНГ ----------
+// ---------- API ROUTING ----------
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $action = $_GET['action'] ?? null;
 
-// Если явно не просили API (нет action и нет заголовка fetch), отдадим HTML-UI
+// ---------- HTML UI ----------
 if ($action === null && $method === 'GET' && empty($_GET)) {
     header('Content-Type: text/html; charset=utf-8'); ?>
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <title>Operational Timeline — Editor</title>
@@ -132,38 +114,35 @@ if ($action === null && $method === 'GET' && empty($_GET)) {
     .muted{color:var(--fg2)}
     .row-actions{display:flex;gap:8px}
     .pill{font-size:12px;padding:2px 8px;border-radius:999px;background:#1e2422;border:1px solid #2a2f35}
-    .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .card{border:1px solid #2a2f35;background:#0f1211;border-radius:12px;padding:12px}
     .footer{margin-top:16px;color:var(--fg2);font-size:12px}
   </style>
 </head>
 <body>
   <h1>Operational Timeline — Editor</h1>
-
   <div class="bar">
-    <button id="btn-reload">Обновить список</button>
+    <button id="btn-reload">Refresh List</button>
     <span class="muted pill" id="status">—</span>
   </div>
 
   <table id="tbl">
     <thead>
       <tr>
-        <th style="width:130px">Дата (YYYY-MM-DD)</th>
-        <th style="width:260px">Заголовок</th>
-        <th>Описание</th>
-        <th style="width:140px">Действия</th>
+        <th style="width:130px">Date (YYYY-MM-DD)</th>
+        <th style="width:260px">Title</th>
+        <th>Description</th>
+        <th style="width:140px">Actions</th>
       </tr>
       <tr>
         <td><input type="text" id="new-date" placeholder="2024-09-01"></td>
-        <td><input type="text" id="new-title" placeholder="Новый этап"></td>
-        <td><textarea id="new-desc" placeholder="Краткое описание"></textarea></td>
-        <td><button id="btn-create">Добавить</button></td>
+        <td><input type="text" id="new-title" placeholder="New milestone"></td>
+        <td><textarea id="new-desc" placeholder="Brief description"></textarea></td>
+        <td><button id="btn-create">Add</button></td>
       </tr>
     </thead>
     <tbody id="tbody"></tbody>
   </table>
 
-  <div class="footer">Файл: <code>data/OperationalTimeline.json</code>. Изменения пишутся атомарно, с резервной копией.</div>
+  <div class="footer">File: <code>data/OperationalTimeline.json</code>. Changes are written atomically with a backup.</div>
 
 <script>
 const API = location.pathname + '?action=';
@@ -206,20 +185,6 @@ async function apiDelete(index) {
   return data;
 }
 
-function rowTemplate(item, index) {
-  return `
-    <tr data-index="${index}">
-      <td><input type="text" value="${escapeHtml(item.date||'')}" class="i-date"></td>
-      <td><input type="text" value="${escapeHtml(item.title||'')}" class="i-title"></td>
-      <td><textarea class="i-desc">${escapeHtml(item.description||'')}</textarea></td>
-      <td class="row-actions">
-        <button class="btn-save">Сохранить</button>
-        <button class="btn-del" style="background:#ff5c5c">Удалить</button>
-      </td>
-    </tr>
-  `;
-}
-
 function escapeHtml(s) {
   return (''+s)
     .replaceAll('&','&amp;')
@@ -230,14 +195,24 @@ function escapeHtml(s) {
 }
 
 async function render() {
-  setStatus('Загрузка…');
+  setStatus('Loading…');
   try {
     const list = await apiList();
     const tbody = document.getElementById('tbody');
-    tbody.innerHTML = list.map(rowTemplate).join('');
-    setStatus(`Записей: ${list.length}`);
-  } catch (e) {
-    setStatus('Ошибка: '+e.message);
+    tbody.innerHTML = list.map(item => `
+      <tr data-index="${item.index}">
+        <td><input type="text" value="${escapeHtml(item.date||'')}" class="i-date"></td>
+        <td><input type="text" value="${escapeHtml(item.title||'')}" class="i-title"></td>
+        <td><textarea class="i-desc">${escapeHtml(item.description||'')}</textarea></td>
+        <td class="row-actions">
+          <button class="btn-save">Save</button>
+          <button class="btn-del" style="background:#ff5c5c">Delete</button>
+        </td>
+      </tr>
+    `).join('');
+    setStatus(`Items: ${list.length}`);
+  } catch(e) {
+    setStatus('Error: '+e.message);
   }
 }
 
@@ -247,16 +222,16 @@ document.getElementById('btn-create').addEventListener('click', async () => {
   const date = document.getElementById('new-date').value.trim();
   const title = document.getElementById('new-title').value.trim();
   const description = document.getElementById('new-desc').value.trim();
-  if (!date || !title || !description) { setStatus('Заполните все поля'); return; }
+  if (!date || !title || !description) { setStatus('Fill all fields'); return; }
   try {
     await apiCreate({ date, title, description });
     document.getElementById('new-date').value = '';
     document.getElementById('new-title').value = '';
     document.getElementById('new-desc').value = '';
     await render();
-    setStatus('Создано');
-  } catch (e) {
-    setStatus('Ошибка: '+e.message);
+    setStatus('Created');
+  } catch(e) {
+    setStatus('Error: '+e.message);
   }
 });
 
@@ -269,23 +244,23 @@ document.getElementById('tbody').addEventListener('click', async (e) => {
     const date = tr.querySelector('.i-date').value.trim();
     const title = tr.querySelector('.i-title').value.trim();
     const description = tr.querySelector('.i-desc').value.trim();
-    if (!date || !title || !description) { setStatus('Заполните все поля'); return; }
+    if (!date || !title || !description) { setStatus('Fill all fields'); return; }
     try {
       await apiUpdate(index, { date, title, description });
       await render();
-      setStatus('Сохранено');
-    } catch (err) {
-      setStatus('Ошибка: '+err.message);
+      setStatus('Saved');
+    } catch(err) {
+      setStatus('Error: '+err.message);
     }
   }
   if (btn.classList.contains('btn-del')) {
-    if (!confirm('Удалить запись?')) return;
+    if (!confirm('Delete this item?')) return;
     try {
       await apiDelete(index);
       await render();
-      setStatus('Удалено');
-    } catch (err) {
-      setStatus('Ошибка: '+err.message);
+      setStatus('Deleted');
+    } catch(err) {
+      setStatus('Error: '+err.message);
     }
   }
 });
@@ -301,15 +276,13 @@ render();
 // -------- API (JSON) --------
 if ($action === 'list' && $method === 'GET') {
   $data = read_json_file();
-
-  
-  usort($data, function ($a, $b) {
-      return strcmp($b['date'], $a['date']); 
-  });
-
-  respond_json(200, $data);
+  $list = [];
+  foreach ($data as $idx => $item) {
+      $list[] = ['index'=>$idx, 'date'=>$item['date'], 'title'=>$item['title'], 'description'=>$item['description']];
+  }
+  usort($list, fn($a,$b)=>strcmp($b['date'],$a['date']));
+  respond_json(200, $list);
 }
-
 
 if ($action === 'create' && $method === 'POST') {
     $payload = read_json_body();
@@ -325,9 +298,7 @@ if ($action === 'update' && ($method === 'PUT' || $method === 'POST')) {
     $index = get_index_from_params($payload);
     $item = validate_item($payload);
     $data = read_json_file();
-    if (!array_key_exists($index, $data)) {
-        respond_json(404, ['ok'=>false, 'error'=>'Index not found']);
-    }
+    if (!array_key_exists($index, $data)) respond_json(404, ['ok'=>false,'error'=>'Index not found']);
     $data[$index] = $item;
     write_json_file($data);
     respond_json(200, ['ok'=>true, 'index'=>$index]);
@@ -336,14 +307,10 @@ if ($action === 'update' && ($method === 'PUT' || $method === 'POST')) {
 if ($action === 'delete' && $method === 'DELETE') {
     $index = get_index_from_params($_GET);
     $data = read_json_file();
-    if (!array_key_exists($index, $data)) {
-        respond_json(404, ['ok'=>false, 'error'=>'Index not found']);
-    }
+    if (!array_key_exists($index, $data)) respond_json(404, ['ok'=>false,'error'=>'Index not found']);
     array_splice($data, $index, 1);
     write_json_file($data);
     respond_json(200, ['ok'=>true]);
 }
 
-// Если ничего не сработало:
-respond_json(400, ['ok'=>false, 'error'=>'Bad request']);
-
+respond_json(400, ['ok'=>false,'error'=>'Bad request']);
