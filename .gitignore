@@ -1,0 +1,12 @@
+
+data/
+
+*.json
+
+*.bak
+
+
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
