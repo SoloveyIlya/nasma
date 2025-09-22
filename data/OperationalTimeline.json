@@ -1,52 +1,52 @@
 [
-  {
-    "date": "2023-08-15",
-    "title": "NASMA International Establishes Operational Framework",
-    "description": "Finalized exclusive manufacturing and quality assurance agreements with partner facilities in Guangdong Province. The foundational framework for client project lifecycle management is now active."
-  },
-  {
-    "date": "2023-09-25",
-    "title": "Initiation of First Client Project",
-    "description": "Commencement of the feasibility study and initial design phase for a customized remote health monitoring system (Designated: Project Aether)."
-  },
-  {
-    "date": "2023-11-15",
-    "title": "Strategic Attendance at Medica 2023",
-    "description": "Conducted closed-door meetings with potential technology partners at the Medica 2023 exhibition in Düsseldorf. Exploration of next-generation sensor technologies for bio-augmentation applications."
-  },
-  {
-    "date": "2023-12-20",
-    "title": "Prototype Lab Validation Phase Completed",
-    "description": "Successful internal validation of the first functional prototype for Project Aether. The system is now moving to the field-testing preparation stage."
-  },
-  {
-    "date": "2024-01-31",
-    "title": "ISO 13485:2016 Certification Audit",
-    "description": "Our quality management system has successfully undergone the first stage of the audit process by the certification body, confirming compliance with international medical device standards."
-  },
-  {
-    "date": "2024-02-20",
-    "title": "Expansion into Advanced Materials",
-    "description": "Partner facilities have integrated new, biocompatible alloys for structural components in exoskeleton and longevity device lines, enhancing durability and patient comfort."
-  },
-  {
-    "date": "2024-04-10",
-    "title": "Project Aether Enters Limited Pilot Phase",
-    "description": "Initial batch of monitoring systems from Project Aether has been deployed for restricted field testing with a designated partner clinic in the EU. Data collection is ongoing."
-  },
-  {
-    "date": "2024-05-24",
-    "title": "New Production Standards Implemented",
-    "description": "Manufacturing partners have fully transitioned to enhanced, automated quality assurance protocols for all bio-augmentation device assemblies, increasing production precision by 18%."
-  },
-  {
-    "date": "2024-06-14",
-    "title": "One Year of Operations",
-    "description": "Marking one year of integrated development and manufacturing services for our clientele. Focus remains on strategic growth and deepening our technical expertise in bespoke medical solutions."
-  },
-  {
-    "date": "2024-07-11",
-    "title": "Phase Two Completion for Project Chimera",
-    "description": "The engineering and prototyping phase for a client's advanced mobility exosystem (Project Chimera) has been concluded. Deployment for mass production is pending final validation and regulatory checks."
-  }
+    {
+        "date": "2023-08-15",
+        "title": "NASMA International Establishes Operational Framework",
+        "description": "Finalized exclusive manufacturing and quality assurance agreements with partner facilities in Guangdong Province. The foundational framework for client project lifecycle management is now active."
+    },
+    {
+        "date": "2023-09-25",
+        "title": "Initiation of First Client Project",
+        "description": "Commencement of the feasibility study and initial design phase for a customized remote health monitoring system (Designated: Project Aether)."
+    },
+    {
+        "date": "2023-11-15",
+        "title": "Strategic Attendance at Medica 2023",
+        "description": "Conducted closed-door meetings with potential technology partners at the Medica 2023 exhibition in Düsseldorf. Exploration of next-generation sensor technologies for bio-augmentation applications."
+    },
+    {
+        "date": "2023-12-20",
+        "title": "Prototype Lab Validation Phase Completed",
+        "description": "Successful internal validation of the first functional prototype for Project Aether. The system is now moving to the field-testing preparation stage."
+    },
+    {
+        "date": "2024-01-31",
+        "title": "ISO 13485:2016 Certification Audit",
+        "description": "Our quality management system has successfully undergone the first stage of the audit process by the certification body, confirming compliance with international medical device standards."
+    },
+    {
+        "date": "2024-02-20",
+        "title": "Expansion into Advanced Materials",
+        "description": "Partner facilities have integrated new, biocompatible alloys for structural components in exoskeleton and longevity device lines, enhancing durability and patient comfort."
+    },
+    {
+        "date": "2024-04-10",
+        "title": "Project Aether Enters Limited Pilot Phase",
+        "description": "Initial batch of monitoring systems from Project Aether has been deployed for restricted field testing with a designated partner clinic in the EU. Data collection is ongoing."
+    },
+    {
+        "date": "2024-05-24",
+        "title": "New Production Standards Implemented",
+        "description": "Manufacturing partners have fully transitioned to enhanced, automated quality assurance protocols for all bio-augmentation device assemblies, increasing production precision by 18%."
+    },
+    {
+        "date": "2024-06-14",
+        "title": "One Year of Operations",
+        "description": "Marking one year of integrated development and manufacturing services for our clientele. Focus remains on strategic growth and deepening our technical expertise in bespoke medical solutions."
+    },
+    {
+        "date": "2024-07-11",
+        "title": "Phase Two Completion for Project Chimera",
+        "description": "The engineering and prototyping phase for a client's advanced mobility exosystem (Project Chimera) has been concluded. Deployment for mass production is pending final validation and regulatory checks."
+    }
 ]
