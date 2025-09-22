@@ -300,9 +300,16 @@ render();
 
 // -------- API (JSON) --------
 if ($action === 'list' && $method === 'GET') {
-    $data = read_json_file();
-    respond_json(200, $data);
+  $data = read_json_file();
+
+  
+  usort($data, function ($a, $b) {
+      return strcmp($b['date'], $a['date']); 
+  });
+
+  respond_json(200, $data);
 }
+
 
 if ($action === 'create' && $method === 'POST') {
     $payload = read_json_body();
