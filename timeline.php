@@ -1,6 +1,7 @@
 <?php
 // timeline.php
 // CRUD API + minimal UI for data/OperationalTimeline.json
+// Added session-based auth + login API (action=login)
 
 declare(strict_types=1);
 header('X-Content-Type-Options: nosniff');
@@ -85,10 +86,31 @@ function get_index_from_params(array $params): int {
     return (int)$idx;
 }
 
-// ---------- API ROUTING ----------
-
+// ---------- REQUEST META ----------
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $action = $_GET['action'] ?? null;
+
+// ---------- SESSION / AUTH PROTECTION ----------
+session_start();
+
+// If the user is not authenticated, allow only the login API (action=login POST).
+// For any other API action return 403.
+if (empty($_SESSION['auth'])) {
+    if ($action === 'login' && $method === 'POST') {
+        $payload = read_json_body();
+        // fixed password check (server-side authoritative)
+        if (($payload['password'] ?? '') === '4f&bIQ') {
+            $_SESSION['auth'] = true;
+            respond_json(200, ['ok' => true]);
+        } else {
+            respond_json(403, ['ok' => false, 'error' => 'Invalid password']);
+        }
+    }
+    // If the request is an API action (anything besides the initial HTML view), deny.
+    if ($action !== null) {
+        respond_json(403, ['ok' => false, 'error' => 'Unauthorized']);
+    }
+}
 
 // ---------- HTML UI ----------
 if ($action === null && $method === 'GET' && empty($_GET)) {
@@ -115,6 +137,30 @@ if ($action === null && $method === 'GET' && empty($_GET)) {
     .row-actions{display:flex;gap:8px}
     .pill{font-size:12px;padding:2px 8px;border-radius:999px;background:#1e2422;border:1px solid #2a2f35}
     .footer{margin-top:16px;color:var(--fg2);font-size:12px}
+
+    /* --- Modal styles --- */
+    #login-modal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; z-index: 9999; }
+    #login-modal.show { display: flex; }
+    #login-modal .overlay { position:absolute; inset:0; background: rgba(0,0,0,0.7); backdrop-filter: blur(2px); }
+    #login-modal .panel {
+      position: relative; z-index: 10;
+      width: 100%; max-width: 420px;
+      background: linear-gradient(180deg,#0b0d0c,#0f1211);
+      border: 1px solid rgba(90,252,39,0.12);
+      padding: 20px; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    }
+    #login-modal h2 { margin:0 0 10px; font-size:18px; color:var(--acc) }
+    #login-modal p { margin:0 0 14px; color:var(--fg2); font-size:13px; }
+    #login-modal label{display:block;font-size:13px;margin-bottom:6px;color:var(--fg2)}
+    #login-modal input[type="password"]{
+      width:100%; padding:10px;border-radius:8px;border:1px solid #24302a;background:#081009;color:var(--fg);
+      box-sizing:border-box;margin-bottom:10px;font-size:14px;
+    }
+    #login-modal .actions{display:flex;gap:8px;align-items:center;justify-content:space-between}
+    #login-modal .remember{display:flex;gap:8px;align-items:center;color:var(--fg2);font-size:13px}
+    #login-modal .error{color:#ff6b6b;font-size:13px;margin-top:8px;display:none}
+    #login-modal .hint{font-size:12px;color:var(--fg2);margin-top:8px}
+    #login-modal .btn-login{background:var(--acc);padding:10px 14px;border-radius:8px;font-weight:700}
   </style>
 </head>
 <body>
@@ -144,46 +190,117 @@ if ($action === null && $method === 'GET' && empty($_GET)) {
 
   <div class="footer">File: <code>data/OperationalTimeline.json</code>. Changes are written atomically with a backup.</div>
 
+  <!-- Login Modal -->
+  <div id="login-modal" aria-hidden="true" role="dialog" aria-labelledby="login-title">
+    <div class="overlay" tabindex="-1"></div>
+    <div class="panel" role="document">
+      <h2 id="login-title">Login</h2>
+
+      <label for="login-password">Password</label>
+      <input id="login-password" type="password" autocomplete="current-password" placeholder="Enter password">
+
+      <div class="actions">
+        <div class="remember">
+          <input id="remember" type="checkbox" />
+          <label for="remember" style="margin:0;font-size:13px;color:var(--fg2)">Remember on this device</label>
+        </div>
+        <div style="margin-left:auto">
+          <button id="btn-login" class="btn-login">Sign in</button>
+        </div>
+      </div>
+
+      <div class="error" id="login-error">Invalid password</div>
+    </div>
+  </div>
+
 <script>
 const API = location.pathname + '?action=';
 
 function setStatus(msg){ document.getElementById('status').textContent = msg; }
 
+/* --------------------------
+   Modal / Auth UI handling
+   -------------------------- */
+const modal = document.getElementById('login-modal');
+const passwordInput = document.getElementById('login-password');
+const loginError = document.getElementById('login-error');
+const rememberCheckbox = document.getElementById('remember');
+const btnLogin = document.getElementById('btn-login');
+
+function showModal() {
+  loginError.style.display = 'none';
+  passwordInput.value = '';
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden', 'false');
+  setTimeout(()=> passwordInput.focus(), 50);
+}
+
+function hideModal() {
+  modal.classList.remove('show');
+  modal.setAttribute('aria-hidden', 'true');
+}
+
+/* storage helpers */
+function setLoggedIn(useLocal) {
+  if (useLocal) {
+    localStorage.setItem('isLoggedIn', 'true');
+    sessionStorage.removeItem('isLoggedIn');
+  } else {
+    sessionStorage.setItem('isLoggedIn', 'true');
+    localStorage.removeItem('isLoggedIn');
+  }
+}
+function clearLoggedIn() {
+  sessionStorage.removeItem('isLoggedIn');
+  localStorage.removeItem('isLoggedIn');
+}
+function isClientLoggedIn() {
+  return sessionStorage.getItem('isLoggedIn') === 'true' || localStorage.getItem('isLoggedIn') === 'true';
+}
+
+/* --------------------------
+   API wrappers (include credentials)
+   -------------------------- */
+async function fetchJson(url, opts = {}) {
+  opts.credentials = opts.credentials || 'same-origin';
+  if (!opts.headers) opts.headers = {};
+  const res = await fetch(url, opts);
+  let body;
+  try { body = await res.json(); } catch(e){ throw new Error(res.statusText || 'Invalid JSON'); }
+  if (!res.ok) {
+    const err = body && body.error ? body.error : (res.statusText || 'Error');
+    throw new Error(err);
+  }
+  return body;
+}
+
 async function apiList() {
-  const res = await fetch(API+'list', { method: 'GET' });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || res.statusText);
-  return data;
+  return await fetchJson(API+'list', { method: 'GET' });
 }
 
 async function apiCreate(item) {
-  const res = await fetch(API+'create', {
+  return await fetchJson(API+'create', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(item)
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || res.statusText);
-  return data;
 }
 
 async function apiUpdate(index, item) {
-  const res = await fetch(API+'update', {
+  return await fetchJson(API+'update', {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ index, ...item })
   });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || res.statusText);
-  return data;
 }
 
 async function apiDelete(index) {
-  const res = await fetch(API+'delete&index='+encodeURIComponent(index), { method: 'DELETE' });
-  const data = await res.json();
-  if (!res.ok) throw new Error(data.error || res.statusText);
-  return data;
+  return await fetchJson(API+'delete&index='+encodeURIComponent(index), { method: 'DELETE' });
 }
+
+/* --------------------------
+   Render & event wiring
+   -------------------------- */
 
 function escapeHtml(s) {
   return (''+s)
@@ -205,13 +322,20 @@ async function render() {
         <td><input type="text" value="${escapeHtml(item.title||'')}" class="i-title"></td>
         <td><textarea class="i-desc">${escapeHtml(item.description||'')}</textarea></td>
         <td class="row-actions">
-          <button class="btn-save">Save</button>
+          <button class="btn-save btn">Save</button>
           <button class="btn-del" style="background:#ff5c5c">Delete</button>
         </td>
       </tr>
     `).join('');
     setStatus(`Items: ${list.length}`);
   } catch(e) {
+    // if server says Unauthorized -> clear client flag and show modal
+    if (e.message && e.message.toLowerCase().includes('unauthorized')) {
+      clearLoggedIn();
+      showModal();
+      setStatus('Unauthorized');
+      return;
+    }
     setStatus('Error: '+e.message);
   }
 }
@@ -231,6 +355,12 @@ document.getElementById('btn-create').addEventListener('click', async () => {
     await render();
     setStatus('Created');
   } catch(e) {
+    if (e.message && e.message.toLowerCase().includes('unauthorized')) {
+      clearLoggedIn();
+      showModal();
+      setStatus('Unauthorized');
+      return;
+    }
     setStatus('Error: '+e.message);
   }
 });
@@ -250,6 +380,12 @@ document.getElementById('tbody').addEventListener('click', async (e) => {
       await render();
       setStatus('Saved');
     } catch(err) {
+      if (err.message && err.message.toLowerCase().includes('unauthorized')) {
+        clearLoggedIn();
+        showModal();
+        setStatus('Unauthorized');
+        return;
+      }
       setStatus('Error: '+err.message);
     }
   }
@@ -260,12 +396,74 @@ document.getElementById('tbody').addEventListener('click', async (e) => {
       await render();
       setStatus('Deleted');
     } catch(err) {
+      if (err.message && err.message.toLowerCase().includes('unauthorized')) {
+        clearLoggedIn();
+        showModal();
+        setStatus('Unauthorized');
+        return;
+      }
       setStatus('Error: '+err.message);
     }
   }
 });
 
-render();
+/* --------------------------
+   Login flow
+   -------------------------- */
+
+async function doLogin(password) {
+  // POST to action=login - server sets $_SESSION['auth']=true on success
+  const res = await fetch(API + 'login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'same-origin',
+    body: JSON.stringify({ password })
+  });
+  let body;
+  try { body = await res.json(); } catch(e) { throw new Error('Invalid response'); }
+  if (!res.ok) {
+    const err = body && body.error ? body.error : (res.statusText || 'Login failed');
+    throw new Error(err);
+  }
+  return body;
+}
+
+btnLogin.addEventListener('click', async () => {
+  loginError.style.display = 'none';
+  const pwd = passwordInput.value || '';
+  const remember = rememberCheckbox.checked;
+  if (!pwd) {
+    loginError.textContent = 'Please enter password';
+    loginError.style.display = 'block';
+    return;
+  }
+  try {
+    await doLogin(pwd);
+    // server accepted — set client-side flag (only a boolean), do NOT store password
+    setLoggedIn(remember);
+    hideModal();
+    await render();
+    setStatus('Logged in');
+  } catch(err) {
+    loginError.textContent = err.message || 'Invalid password';
+    loginError.style.display = 'block';
+  }
+});
+
+passwordInput.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') btnLogin.click();
+});
+
+/* If client had a flag, try render; otherwise show modal.
+   If session on server expired, API will return 403 and we will show modal.
+*/
+if (isClientLoggedIn()) {
+  // attempt to load data — if unauthorized server-side, render() will show modal.
+  render();
+} else {
+  // not flagged locally -> show modal and wait for login
+  showModal();
+}
 </script>
 </body>
 </html>
@@ -310,7 +508,6 @@ if ($action === 'delete' && $method === 'DELETE') {
     if (!array_key_exists($index, $data)) respond_json(404, ['ok'=>false,'error'=>'Index not found']);
     array_splice($data, $index, 1);
     write_json_file($data);
-    respond_json(200, ['ok'=>true]);
-}
+    respond_json(200, ['ok'=>true]); }
 
 respond_json(400, ['ok'=>false,'error'=>'Bad request']);
