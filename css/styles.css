@@ -913,3 +913,33 @@ main { flex: 1 0 auto; }
     transition: background 0.3s ease, box-shadow 0.3s ease;
   }
 }
+
+
+.logo {
+ 
+  transform: translateY(-1px);
+  transition: transform .18s ease;
+}
+
+.logo img {
+ 
+  transform: translateY(-1px);
+  transition: transform .18s ease;
+}
+
+.logo-text {
+  
+  transform: translateY(1px);
+  transition: transform .18s ease;
+}
+
+
+@media (max-width: 820px) {
+  .logo,
+  .logo img {
+    transform: translateY(3px);
+  }
+  .logo-text {
+    transform: translateY(2px);
+  }
+}
