@@ -20,11 +20,11 @@
 html, body {
   height: 100%;
   margin: 0;
-  background: var(--bg); /* основной фон */
+  background: var(--bg); /* main background */
 }
 
 main {
-  background: var(--bg); /* чтобы контент тоже имел фон */
+  background: var(--bg); /* so content also has background */
   flex: 1;
 }
 header {
@@ -63,7 +63,7 @@ header {
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover; /* сохраняем пропорции, без растяжения */
+      object-fit: cover; /* maintain proportions, no stretching */
     }
 
     .timeline-content {
@@ -71,9 +71,9 @@ header {
       margin-left: 40vw;
       width: 60vw;
       height: calc(100vh - var(--header-height));
-      overflow-y: auto; /* скроллим только новости */
+      overflow-y: auto; /* scroll only news */
       -webkit-overflow-scrolling: touch;
-      padding: 1.25rem 3rem 3rem 4rem; /* уменьшили верхний отступ */
+      padding: 1.25rem 3rem 3rem 4rem; /* reduced top padding */
       background-color: var(--bg);
       z-index: 1;
     }
